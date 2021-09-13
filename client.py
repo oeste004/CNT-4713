@@ -58,7 +58,7 @@ class client:
 
     file = open(fileName, 'rb')
     data = file.read()
-
+    s.sendall(data)
 
     s.close()
 
