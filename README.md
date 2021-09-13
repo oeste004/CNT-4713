@@ -1,0 +1,2 @@
+- couldn't connect to www.google.com due to port being read as a string from command line. I converted the port number to an integer.
+- was receiving accio from server with b header and \r\n. used decode('utf-8') from lecture
