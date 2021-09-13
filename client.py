@@ -11,7 +11,8 @@ class client:
 
     # if port number is outside the valid range for TCP
     if port > 65535 or port < 1:
-        sys.stderr.write("ERROR: ")
+        print("ERROR: ")
+        sys.stderr.write()
         sys.exit(1)
 
     nameLen = len(fileName)
@@ -27,7 +28,8 @@ class client:
         s.settimeout(5)
         print("Connection succeeded.")
     except:
-        sys.stderr.write("ERROR: ")
+        print("ERROR: ")
+        sys.stderr.write()
         sys.exit(1)
 
     # receive data in chunks and shows error if not received properly
@@ -49,16 +51,17 @@ class client:
         #fileName.encode()
     #binaryName = "{0:b}".format(fileName)
 
-    s.sendall(b"Content-Disposition: attachment; filename = \r\n")
-    s.sendall(fileName.encode())
-    s.sendall(b"Content-Type: application/octet-stream\r\n")
-    s.sendall(b"Content-Length: \r\n")
-   # s.sendall(file_size.encode())
-    #s.sendall("\r\n")
+    s.send(b"Content-Disposition: attachment; filename = \r\n")
+    s.send(fileName.encode())
+    s.send(b"Content-Type: application/octet-stream\r\n")
+    s.send(b"Content-Length: \r\n")
+    #s.send(file_size)
+    #s.send("\r\n")
 
     file = open(fileName, 'rb')
     data = file.read()
-    s.sendall(data)
+    s.send(data)
 
+    print(data)
 
 
