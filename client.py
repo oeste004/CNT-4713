@@ -11,25 +11,23 @@ class client:
 
     # if port number is outside the valid range for TCP
     if port > 65535 or port < 1:
-        print("ERROR: ")
-        sys.stderr.write()
+        sys.stderr.write("ERROR: ")
         sys.exit(1)
 
     nameLen = len(fileName)
 
-    #if fileName[nameLen-1] != 't' or fileName[nameLen-2] != 'x' or fileName[nameLen-3] != 't':
-    #    sys.stderr.write("ERROR: ")
+    if fileName[nameLen-1] != 't' or fileName[nameLen-2] != 'x' or fileName[nameLen-3] != 't':
+        sys.stderr.write("ERROR: ")
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # connect to host and exits if not successful
     try:
         s.connect((host, port))
-        s.settimeout(5)
+        s.settimeout(10)
         print("Connection succeeded.")
     except:
-        print("ERROR: ")
-        sys.stderr.write()
+        sys.stderr.write("ERROR: ")
         sys.exit(1)
 
     # receive data in chunks and shows error if not received properly
@@ -40,16 +38,12 @@ class client:
         if data:
             message = message + data
     except:
-        print("error")
+        sys.stderr.write("ERROR: ")
         sys.exit(1)
 
     print(message)
 
     file_size = os.path.getsize(fileName)
-
-    binaryName = ''.join(format(ord(i), '08b') for i in fileName)
-        #fileName.encode()
-    #binaryName = "{0:b}".format(fileName)
 
     s.send(b"Content-Disposition: attachment; filename = \r\n")
     s.send(fileName.encode())
@@ -62,6 +56,6 @@ class client:
     data = file.read()
     s.send(data)
 
-    print(data)
+    s.close()
 
 
