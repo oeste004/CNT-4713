@@ -53,8 +53,9 @@ class client:
     #s.send("\r\n")
 
     file = open(fileName, 'rb')
-    data = file.read()
-    s.send(data)
+    lines = file.readlines()
+    for line in lines:
+        s.send(line)
 
     s.close()
 
