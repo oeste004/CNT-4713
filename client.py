@@ -16,15 +16,15 @@ class client:
 
     nameLen = len(fileName)
 
-    if fileName[nameLen-1] != 't' or fileName[nameLen-2] != 'x' or fileName[nameLen-3] != 't':
-        sys.stderr.write("ERROR: ")
+    #if fileName[nameLen-1] != 't' or fileName[nameLen-2] != 'x' or fileName[nameLen-3] != 't':
+    #    sys.stderr.write("ERROR: ")
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # connect to host and exits if not successful
     try:
         s.connect((host, port))
-        s.settimeout(10)
+        s.settimeout(5)
         print("Connection succeeded.")
     except:
         sys.stderr.write("ERROR: ")
@@ -60,6 +60,5 @@ class client:
     data = file.read()
     s.sendall(data)
 
-    s.close()
 
 
