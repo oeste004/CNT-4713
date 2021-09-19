@@ -19,7 +19,7 @@ class client:
     # connect to host and exits if not successful
     try:
         s.connect((host, port))
-        s.settimeout(2)
+        s.settimeout(10)
         print("Connection succeeded.")
     except:
         sys.stderr.write("ERROR: ")
@@ -45,6 +45,7 @@ class client:
     s.send(b"Content-Type: application/octet-stream\r\n")
     s.send(b"Content-Length: ")
     s.send(f"{file_size}".encode())
+    s.send(b"\r\n")
     s.send(b"\r\n")
 
     line = file.readline(file_size)
