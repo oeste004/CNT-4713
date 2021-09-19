@@ -39,8 +39,9 @@ class client:
 
     file = open(fileName, 'rb')
 
-    s.send(b"Content-Disposition: attachment; filename=\r\n")
+    s.send(b"Content-Disposition: attachment; filename=")
     s.send(f"{fileName}".encode())
+    s.send(b"\r\n")
     s.send(b"Content-Type: application/octet-stream\r\n")
     s.send(b"Content-Length: \r\n")
     s.send(f"{file_size}".encode())
