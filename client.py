@@ -19,7 +19,7 @@ class client:
     # connect to host and exits if not successful
     try:
         s.connect((host, port))
-        s.settimeout(10)
+        s.settimeout(2)
         print("Connection succeeded.")
     except:
         sys.stderr.write("ERROR: ")
