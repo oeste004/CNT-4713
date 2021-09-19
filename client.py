@@ -43,7 +43,7 @@ class client:
     s.send(f"{fileName}".encode())
     s.send(b"\r\n")
     s.send(b"Content-Type: application/octet-stream\r\n")
-    s.send(b"Content-Length: \r\n")
+    s.send(b"Content-Length: ")
     s.send(f"{file_size}".encode())
     s.send(b"\r\n")
 
