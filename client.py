@@ -18,6 +18,7 @@ class client:
 
     if fileName[nameLen-1] != 't' or fileName[nameLen-2] != 'x' or fileName[nameLen-3] != 't':
         sys.stderr.write("ERROR: ")
+        sys.exit(1)
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -32,31 +33,35 @@ class client:
 
     # receive data in chunks and shows error if not received properly
     message = ""
-    data = ''
     try:
         message = s.recv(1024)
-        if data:
-            message = message + data
     except:
         sys.stderr.write("ERROR: ")
         sys.exit(1)
 
-    print(message)
+    print(message.decode())
 
     file_size = os.path.getsize(fileName)
 
-    s.send(b"Content-Disposition: attachment; filename = \r\n")
-    s.send(fileName.encode())
+    file = open(fileName, 'rb')
+
+    line = file.readline(file_size)
+
+    s.send(b"Content-Disposition: attachment; filename=\r\n")
+    s.send(f"{fileName}".encode())
     s.send(b"Content-Type: application/octet-stream\r\n")
     s.send(b"Content-Length: \r\n")
-    #s.send(file_size)
-    #s.send("\r\n")
+    s.send(f"{file_size}".encode())
+    s.send(b"\r\n")
 
-    file = open(fileName, 'rb')
-    lines = file.readlines()
-    for line in lines:
+    while line:
+        print("sending...")
+        print(line)
         s.send(line)
+        line = file.readline(file_size)
 
+    s.sendfile(file)
+
+    file.close()
     s.close()
-
-
+    exit(0)
