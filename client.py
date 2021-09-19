@@ -14,12 +14,6 @@ class client:
         sys.stderr.write("ERROR: ")
         sys.exit(1)
 
-    nameLen = len(fileName)
-
-    if fileName[nameLen-1] != 't' or fileName[nameLen-2] != 'x' or fileName[nameLen-3] != 't':
-        sys.stderr.write("ERROR: ")
-        sys.exit(1)
-
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # connect to host and exits if not successful
@@ -45,8 +39,6 @@ class client:
 
     file = open(fileName, 'rb')
 
-    line = file.readline(file_size)
-
     s.send(b"Content-Disposition: attachment; filename=\r\n")
     s.send(f"{fileName}".encode())
     s.send(b"Content-Type: application/octet-stream\r\n")
@@ -54,13 +46,12 @@ class client:
     s.send(f"{file_size}".encode())
     s.send(b"\r\n")
 
+    line = file.readline(file_size)
     while line:
-        print("sending...")
-        print(line)
+        #print("sending...")
+        #print(line)
         s.send(line)
         line = file.readline(file_size)
-
-    s.sendfile(file)
 
     file.close()
     s.close()
