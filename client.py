@@ -16,6 +16,13 @@ class client:
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+    response = os.system("ping -c 1 " + host)
+    if response == 0:
+        pass
+    else:
+        sys.stderr.write("ERROR: ")
+        sys.exit(1)
+
     # connect to host and exits if not successful
     try:
         s.connect((host, port))
