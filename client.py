@@ -10,7 +10,7 @@ class client:
     fileName = command[3]
 
     # if port number is outside the valid range for TCP
-    if port > 65535 or port < 1025:
+    if port > 65535 or port < 1:
         sys.stderr.write("ERROR: Invalid port number.")
         sys.exit(1)
 
@@ -19,7 +19,7 @@ class client:
     # connect to host and exits if not successful
     try:
         s.connect((host, port))
-        s.settimeout(2)
+        s.settimeout(4)
         print("Connection succeeded.")
     except:
         sys.stderr.write("ERROR: Cannot connect.")
