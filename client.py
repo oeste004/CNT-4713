@@ -48,13 +48,15 @@ class client:
     s.send(b"\r\n")
     s.send(b"\r\n")
 
-    line = file.readline(file_size)
-    while line:
-        #print("sending...")
-        #print(line)
-        s.send(line)
-        line = file.readline(file_size)
 
+    chunk = file.readline(file_size)
+    line = ' '
+    print(file_size)
+    while len(line) > 0:
+        line = file.readline(file_size)
+        chunk += line
+
+    s.send(chunk)
     file.close()
     s.close()
     exit(0)
