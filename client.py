@@ -21,8 +21,9 @@ class client:
         s.connect((host, port))
         s.settimeout(5)
         print("Connection succeeded.")
-    except:
+    except Exception as e:
         sys.stderr.write("ERROR: ")
+        s.close()
         sys.exit(1)
 
     # receive data in chunks and shows error if not received properly
