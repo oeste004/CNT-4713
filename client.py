@@ -18,16 +18,17 @@ class client:
 
     # connect to host and exits if not successful
     try:
+        s.settimeout(7)
         s.connect((host, port))
-        s.settimeout(3)
         print("Connection succeeded.")
     except Exception as e:
-        sys.stderr.write(f"ERROR: Could not connect to server")
+        sys.stderr.write("ERROR: Could not connect to server")
         sys.exit(1)
 
     # receive data in chunks and shows error if not received properly
     message = ""
     try:
+        s.settimeout(7)
         message = s.recv(1024)
     except:
         sys.stderr.write("ERROR: Nothing received from server.")
