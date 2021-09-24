@@ -19,11 +19,10 @@ class client:
     # connect to host and exits if not successful
     try:
         s.connect((host, port))
-        s.settimeout(5)
+        s.settimeout(3)
         print("Connection succeeded.")
     except Exception as e:
-        sys.stderr.write("ERROR: ")
-        s.close()
+        sys.stderr.write(f"ERROR: Could not connect to server")
         sys.exit(1)
 
     # receive data in chunks and shows error if not received properly
@@ -31,7 +30,7 @@ class client:
     try:
         message = s.recv(1024)
     except:
-        sys.stderr.write("ERROR: ")
+        sys.stderr.write("ERROR: Nothing received from server.")
         sys.exit(1)
 
     print(message.decode())
@@ -49,10 +48,8 @@ class client:
     s.send(b"\r\n")
     s.send(b"\r\n")
 
-
     chunk = file.readline(file_size)
     line = ' '
-    print(file_size)
     while len(line) > 0:
         line = file.readline(file_size)
         chunk += line
