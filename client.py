@@ -35,6 +35,7 @@ class client:
         sys.stderr.write("ERROR: Nothing received from server.")
         sys.exit(1)
 
+    # message received from server and printed
     print(message.decode())
 
     file_size = os.path.getsize(fileName)
@@ -49,7 +50,6 @@ class client:
     s.send(f"{file_size}".encode())
     s.send(b"\r\n")
     s.send(b"\r\n")
-
 
     chunk = file.readline(file_size)
     line = ' '
