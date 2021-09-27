@@ -7,7 +7,6 @@ import signal
 command = sys.argv
 port = int(command[1])
 host = "0.0.0.0"
-print(host)
 
 if port > 65535 or port < 1024:
     sys.stderr.write("ERROR: Incorrect port number")
@@ -32,7 +31,7 @@ while True:
         time.sleep(1)
         sock, address = s.accept()
         print("Accepted connection from:", address)
-        sock.send(b"\r\naccio\r\n")
+        sock.send(b"\r\n'accio\r\n")
         full_message = ""
         bit = ' '
         while len(bit) > 0:
