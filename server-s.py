@@ -1,3 +1,4 @@
+
 import socket
 import sys
 import os
@@ -18,31 +19,24 @@ s.bind((host, port))
 s.listen(10)
 not_stopped = False
 
-def handler(signum, frame):
-    print('Signal handler called with signal', signum)
-    exit(0)
+sock = ""
 
-while True:
-    sock = ""
-
-    try:
-        sock, address = s.accept()
-        print("Accepted connection from:", address)
-        sock.send(b"\r\n'accio\r\n")
-        full_message = sock.recv(1).decode()
-        bit = ' '
-        while len(bit) > 0:
-            bit = sock.recv(1)
-            full_message = full_message + bit.decode("utf-8")
-        print(full_message)
-        messageLength = len(full_message.encode('utf-8'))
-        print("message length: " + str(messageLength))
-        signal.signal(signal.SIGINT, handler)
-        signal.signal(signal.SIGTERM, handler)
-        time.sleep(1)
-    except KeyboardInterrupt:
-        sock.close()
-        break
+try:
+    sock, address = s.accept()
+    print("Accepted connection from:", address)
+    sock.send(b"\r\n'accio\r\n")
+    full_message = sock.recv(1).decode()
+    bit = ' '
+    messageLength = len(full_message)
+    while len(bit) > 0:
+        bit = sock.recv(8)
+        full_message = full_message + bit.decode("utf-8")
+        messageLength = messageLength + len(bit)
+    print(full_message)
+    print(messageLength+50)
+    time.sleep(1)
+except KeyboardInterrupt:
+    sock.close()
 
 s.close()
 exit(0)
