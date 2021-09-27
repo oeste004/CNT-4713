@@ -9,7 +9,7 @@ port = int(command[1])
 host = "0.0.0.0"
 print(host)
 
-if port > 65535 or port < 1:
+if port > 65535 or port < 1024:
     sys.stderr.write("ERROR: Incorrect port number")
     sys.exit(1)
 
@@ -25,7 +25,11 @@ def handler(signum, frame):
 
 while True:
     sock = ""
+
     try:
+        signal.signal(signal.SIGINT, handler)
+        signal.signal(signal.SIGTERM, handler)
+        time.sleep(1)
         sock, address = s.accept()
         print("Accepted connection from:", address)
         sock.send(b"\r\naccio\r\n")
@@ -37,8 +41,6 @@ while True:
         print(full_message)
         messageLength = len(full_message.encode('utf-8'))
         print("message length: " + str(messageLength))
-        signal.signal(signal.SIGINT, handler)
-        signal.signal(signal.SIGTERM, handler)
     except KeyboardInterrupt:
         sock.close()
         break
