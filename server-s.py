@@ -26,13 +26,10 @@ while True:
     sock = ""
 
     try:
-        signal.signal(signal.SIGINT, handler)
-        signal.signal(signal.SIGTERM, handler)
-        time.sleep(1)
         sock, address = s.accept()
         print("Accepted connection from:", address)
         sock.send(b"\r\n'accio\r\n")
-        full_message = ""
+        full_message = sock.recv(1).decode()
         bit = ' '
         while len(bit) > 0:
             bit = sock.recv(1)
@@ -40,6 +37,9 @@ while True:
         print(full_message)
         messageLength = len(full_message.encode('utf-8'))
         print("message length: " + str(messageLength))
+        signal.signal(signal.SIGINT, handler)
+        signal.signal(signal.SIGTERM, handler)
+        time.sleep(1)
     except KeyboardInterrupt:
         sock.close()
         break
