@@ -8,7 +8,7 @@ import threading
 from _thread import *
 
 lock = threading.Lock()
-messageLength = 0
+isProcessing = False
 
 def initiate():
     command = sys.argv
@@ -22,37 +22,45 @@ def initiate():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     sock.bind((host, port))
-    sock.listen(10)
+    sock.listen(3)
+    count=0
     #not_stopped = False
+    isProcessing = False
     while True:
         try:
-            s, address = sock.accept()
             time.sleep(1)
-            with s:
-                #print("Accepted connection from:", address)
-                s.send(b"accio\r\n")
-                lock.acquire()
-                newThread = start_new_thread(threads, (s, ))
+            s, address = sock.accept()
+            isProcessing = True
+            count += 1
+            print(count)
+            time.sleep(1)
+            s.send(b"accio\r\n")
+            lock.acquire()
+            
+            newThread = start_new_thread(threads, (s, ))
         except KeyboardInterrupt:
-            sock.close()
+            print("CLOSED")
 
 def threads(s):
-    #print(s)
-    #s.send(b"accio\r\n")
+    full_message = ' '
+    messageLength = 0
     while True:
         try:
+            s.settimeout(10)
             data = s.recv(1024)
             if not data:
-                sys.stderr.write("ERROR: Nothing received from server.")
+                sys.stderr.write("ERROR: Nothing received from client.")
                 lock.release()
-                sys.exit(0)
+                #sys.exit(0)
+                break
             else:
                 full_message = full_message + data.decode("utf-8")
                 messageLength = messageLength + len(data)
         except KeyboardInterrupt:
              lock.release()
-             sys.exit(1)  
-        s.close()
+             sys.exit(1) 
+        print(messageLength)
+    s.close()
         
 if __name__ == '__main__':
     initiate()
