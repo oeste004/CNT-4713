@@ -8,6 +8,7 @@ from _thread import *
 
 lock = threading.Lock()
 isProcessing = False
+timeoutTimer = time.time()
 
 def initiate():
     command = sys.argv
@@ -28,17 +29,15 @@ def initiate():
         try:
             s, address = sock.accept()
             s.send(b"accio\r\n")
-            s.settimeout(10)
             data = s.recv(1024)
-            #if s.timeout:
-                #print("ERROR: No data received!")
+            print("here")
             while data:
-                data = ""
+                data = b''
                 messageLength = messageLength + len(data)
-                data = s.recv(1024)
-            
+                data = s.recv(10000)
+                
             if (messageLength > 0):
-                print(messageLength - 20)
+                print(messageLength)
         except KeyboardInterrupt:
             sys.exit(0)
 
