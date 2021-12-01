@@ -22,7 +22,7 @@ def initiate():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     sock.bind(("0.0.0.0", port))
-    sock.listen(3)
+    sock.listen(10)
     count = 0
     while True:
         full_message = ' '
