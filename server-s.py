@@ -4,39 +4,56 @@ import sys
 import os
 import time
 import signal
+import threading
+from _thread import *
 
-command = sys.argv
-port = int(command[1])
-host = "0.0.0.0"
+lock = threading.Lock()
+messageLength = 0
 
-if port > 65535 or port < 1024:
-    sys.stderr.write("ERROR: Incorrect port number")
-    sys.exit(1)
+def initiate():
+    command = sys.argv
+    port = int(command[1])
+    host = "0.0.0.0"
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    if port > 65535 or port < 1024:
+        sys.stderr.write("ERROR: Incorrect port number")
+        sys.exit(1)
 
-s.bind((host, port))
-s.listen(10)
-not_stopped = False
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-sock = ""
+    sock.bind((host, port))
+    sock.listen(10)
+    #not_stopped = False
+    while True:
+        try:
+            s, address = sock.accept()
+            time.sleep(1)
+            with s:
+                #print("Accepted connection from:", address)
+                s.send(b"accio\r\n")
+                lock.acquire()
+                newThread = start_new_thread(threads, (s, ))
+        except KeyboardInterrupt:
+            sock.close()
 
-try:
-    sock, address = s.accept()
-    print("Accepted connection from:", address)
-    sock.send(b"\r\n'accio\r\n")
-    full_message = sock.recv(1).decode()
-    bit = ' '
-    messageLength = len(full_message)
-    while len(bit) > 0:
-        bit = sock.recv(8)
-        full_message = full_message + bit.decode("utf-8")
-        messageLength = messageLength + len(bit)
-    print(full_message)
-    print(messageLength+50)
-    time.sleep(1)
-except KeyboardInterrupt:
-    sock.close()
-
-s.close()
-exit(0)
+def threads(s):
+    #print(s)
+    #s.send(b"accio\r\n")
+    while True:
+        try:
+            data = s.recv(1024)
+            if not data:
+                sys.stderr.write("ERROR: Nothing received from server.")
+                lock.release()
+                sys.exit(0)
+            else:
+                full_message = full_message + data.decode("utf-8")
+                messageLength = messageLength + len(data)
+        except KeyboardInterrupt:
+             lock.release()
+             sys.exit(1)  
+        s.close()
+        
+if __name__ == '__main__':
+    initiate()
+    
