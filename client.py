@@ -39,6 +39,7 @@ class client:
     print(message.decode())
 
     file_size = os.path.getsize(fileName)
+    print(file_size)
 
     file = open(fileName, 'rb')
 
