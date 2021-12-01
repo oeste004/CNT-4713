@@ -32,7 +32,7 @@ def initiate():
             data = s.recv(1024)
             while data:
                 data = b''
-                data = s.recv(10000)
+                data = s.recv(100000000)
                 messageLength = messageLength + len(data)
                 
             if (messageLength > 0):

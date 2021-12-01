@@ -23,11 +23,13 @@ def initiate():
 
     sock.bind(("0.0.0.0", port))
     sock.listen(3)
+    count = 0
     while True:
         full_message = ' '
         messageLength = 0
         try:
             s, address = sock.accept()
+            count += 1
             s.send(b"accio\r\n")
             data = s.recv(1024)
             while data:
