@@ -1,4 +1,3 @@
-
 import socket
 import sys
 import os
@@ -23,45 +22,27 @@ def initiate():
 
     sock.bind((host, port))
     sock.listen(3)
-    count=0
-    #not_stopped = False
-    isProcessing = False
     while True:
+        full_message = ' '
+        messageLength = 0
         try:
-            time.sleep(1)
             s, address = sock.accept()
-            isProcessing = True
-            count += 1
-            print(count)
-            time.sleep(1)
             s.send(b"accio\r\n")
-            lock.acquire()
-            
-            newThread = start_new_thread(threads, (s, ))
-        except KeyboardInterrupt:
-            print("CLOSED")
-
-def threads(s):
-    full_message = ' '
-    messageLength = 0
-    while True:
-        try:
             s.settimeout(10)
             data = s.recv(1024)
-            if not data:
-                sys.stderr.write("ERROR: Nothing received from client.")
-                lock.release()
-                #sys.exit(0)
-                break
-            else:
-                full_message = full_message + data.decode("utf-8")
+            #if s.timeout:
+                #print("ERROR: No data received!")
+            while data:
+                data = ""
                 messageLength = messageLength + len(data)
+                data = s.recv(1024)
+            
+            if (messageLength > 0):
+                print(messageLength - 20)
         except KeyboardInterrupt:
-             lock.release()
-             sys.exit(1) 
-        print(messageLength)
-    s.close()
+            sys.exit(0)
+
+
         
 if __name__ == '__main__':
     initiate()
-    
