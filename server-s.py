@@ -30,11 +30,10 @@ def initiate():
             s, address = sock.accept()
             s.send(b"accio\r\n")
             data = s.recv(1024)
-            print("here")
             while data:
                 data = b''
-                messageLength = messageLength + len(data)
                 data = s.recv(10000)
+                messageLength = messageLength + len(data)
                 
             if (messageLength > 0):
                 print(messageLength)
